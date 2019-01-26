@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding" addBOMForNewFiles="with NO BOM" />
+  <component name="InspectionProjectProfileManager">
+    <profile version="1.0">
+      <option name="myName" value="Project Default" />
+    </profile>
+    <version value="1.0" />
+  </component>
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/MITEUtils.iml" filepath="$PROJECT_DIR$/MITEUtils.iml" />
+    </modules>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/out" />
+  </component>
+  <component name="VcsDirectoryMappings">
+    <mapping directory="$PROJECT_DIR$/MITEUtils" vcs="Git" />
+  </component>
+  <component name="libraryTable">
+    <library name="classes">
+      <CLASSES>
+        <root url="file://$PROJECT_DIR$/libs/classes" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="lwjgl-2.9.0">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/libs/lwjgl-2.9.0.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="native">
+      <CLASSES />
+      <JAVADOC />
+      <NATIVE>
+        <root url="file://$PROJECT_DIR$/libs/native" />
+      </NATIVE>
+      <SOURCES />
+    </library>
+  </component>
+</project>
