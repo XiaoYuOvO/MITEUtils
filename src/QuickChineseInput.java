@@ -1,20 +1,22 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.StringSelection;
-import java.awt.event.*;
-import java.security.Key;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 public class QuickChineseInput {
     private static JDialog frame;
     private static Point origin = new Point();
     private static JTextField textField = new JTextField();
 
-    void requestFocus(){
+    void requestFocus() {
         textField.requestFocus();
     }
-    void setBonuds(int x,int y){
-        frame.setBounds(x,y,200,25);
+
+    void setBonuds(int x, int y) {
+        frame.setBounds(x, y, 200, 25);
     }
+
     void start() {
         frame = new JDialog();
         frame.setBounds(100, 100, 200, 25);
@@ -65,12 +67,6 @@ public class QuickChineseInput {
                         rb.keyPress(KeyEvent.VK_TAB);
                         rb.keyRelease(KeyEvent.VK_ALT);
                         rb.keyRelease(KeyEvent.VK_TAB);
-                        rb.keyPress(KeyEvent.VK_CONTROL);
-                        rb.keyPress(KeyEvent.VK_V);
-                        rb.keyRelease(KeyEvent.VK_CONTROL);
-                        rb.keyRelease(KeyEvent.VK_V);
-                        rb.keyPress(KeyEvent.VK_ENTER);
-                        rb.keyRelease(KeyEvent.VK_ENTER);
                     } catch (AWTException e1) {
                         e1.printStackTrace();
                     }
@@ -84,9 +80,9 @@ public class QuickChineseInput {
         textField.setBounds(0, 5, 200, 20);
         textField.setToolTipText("在此输入信息");
         textField.setForeground(new Color(0, 25, 255, 254));
-        textField.setCaretColor(new Color(0,0,0,0));
-        textField.setDisabledTextColor(new Color(0,0,0,0));
-        textField.setFont(new Font("Monospaced",Font.BOLD,16));
+        textField.setCaretColor(new Color(0, 0, 0, 0));
+        textField.setDisabledTextColor(new Color(0, 0, 0, 0));
+        textField.setFont(new Font("Monospaced", Font.BOLD, 16));
 
         frame.setBackground(new Color(0, 0, 0, 0));
         frame.setForeground(new Color(0, 0, 0, 0));

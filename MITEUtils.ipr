@@ -7,6 +7,15 @@
     </profile>
     <version value="1.0" />
   </component>
+  <component name="ProjectDictionaryState">
+    <dictionary name="19662">
+      <words>
+        <w>minecraft</w>
+        <w>waypoint</w>
+        <w>waypoints</w>
+      </words>
+    </dictionary>
+  </component>
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/MITEUtils.iml" filepath="$PROJECT_DIR$/MITEUtils.iml" />
@@ -31,7 +40,9 @@
         <root url="jar://$PROJECT_DIR$/libs/lwjgl-2.9.0.jar!/" />
       </CLASSES>
       <JAVADOC />
-      <SOURCES />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.ideaLibSources/lwjgl-2.9.0-sources.jar!/" />
+      </SOURCES>
     </library>
     <library name="native">
       <CLASSES />
