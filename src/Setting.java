@@ -1,25 +1,32 @@
 import org.lwjgl.input.Keyboard;
 
 import javax.swing.*;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.*;
+import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static java.awt.event.KeyEvent.*;
 import static org.lwjgl.input.Keyboard.*;
 
-class KeySetting {
+class Setting {
     static final AtomicInteger Key_CycleToChineseInput = new AtomicInteger(KEY_T);
     static final AtomicInteger Key_OpenSetting = new AtomicInteger(KEY_G);
-    static final AtomicInteger Key_SaveCurrentPosToWaypoint = new AtomicInteger(KEY_M);
+    static final AtomicInteger Key_SaveCurrentPosToWaypoint = new AtomicInteger(KEY_N);
     static final AtomicInteger Key_CopyCurrentPosToClipboard = new AtomicInteger(KEY_L);
     static final AtomicInteger Key_SaveWaypointsToFile = new AtomicInteger(KEY_P);
-    static final AtomicInteger Key_ReloadWaypointsFromeFile = new AtomicInteger(KEY_K);
+    static final AtomicInteger Key_ReloadWaypointsFromFile = new AtomicInteger(KEY_K);
+    static final AtomicInteger Key_OpenRemoveWaypointDialog = new AtomicInteger(KEY_M);
     private static int KeySettingPairCount = 0;
     private JDialog keySettingDialog = new JDialog();
     private JButton closeButton = new JButton("确定");
+    private boolean MITESettingFileExists = true;
 
-    KeySetting() {
+    Setting() {
+        loadKeySettingFromFile();
         init();
     }
 
@@ -257,7 +264,9 @@ class KeySetting {
         addPairOfKeySettingAndTip("将当前坐标复制到剪贴板:", Key_CopyCurrentPosToClipboard);
         addPairOfKeySettingAndTip("将当前位置保存为路径点:", Key_SaveCurrentPosToWaypoint);
         addPairOfKeySettingAndTip("将路径点保存至文件:", Key_SaveWaypointsToFile);
-        addPairOfKeySettingAndTip("重新从文件载入路径点", Key_ReloadWaypointsFromeFile);
+        addPairOfKeySettingAndTip("重新从文件载入路径点:", Key_ReloadWaypointsFromFile);
+        addPairOfKeySettingAndTip("移除路径点:", Key_OpenRemoveWaypointDialog);
+        addPairOfNumberSettingAndTip("最大路径点备份数",Main.waypointUtilInstance.waypointsBackupFileMaximum);
         closeButton.setBounds(150, KeySettingPairCount * 20 + 20, 75, 40);
         closeButton.addActionListener((e -> keySettingDialog.setVisible(false)));
         keySettingDialog.add(closeButton);
@@ -265,10 +274,35 @@ class KeySetting {
         keySettingDialog.setBounds(MITEInfoGetter.getScreenWidth() / 2, MITEInfoGetter.getScreenHeight() / 2, 400, KeySettingPairCount * 20 + 90);
         keySettingDialog.setResizable(false);
         keySettingDialog.setVisible(false);
+        loadKeySettingFromFile();
     }
 
     void showKeySettingFrame() {
         keySettingDialog.setVisible(true);
+    }
+
+    private void addPairOfNumberSettingAndTip(String tipString,AtomicInteger numberReference){
+        JLabel label = new JLabel(tipString);
+        JTextField textField = new JTextField(String.valueOf(numberReference.get()));
+        label.setBounds(0, KeySettingPairCount * 20, tipString.length() * 20, 20);
+        textField.setBounds(300, KeySettingPairCount * 20, 100, 20);
+        textField.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+
+            }
+            @Override
+            public void focusLost(FocusEvent e) {
+                try{
+                    numberReference.set(Integer.parseInt(textField.getText()));
+                }catch (NumberFormatException exception){
+                    JOptionPane.showMessageDialog(keySettingDialog, "请输入整数", "错误", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+        keySettingDialog.add(label);
+        keySettingDialog.add(textField);
+        KeySettingPairCount++;
     }
 
     private void addPairOfKeySettingAndTip(String tipString, AtomicInteger keyCodeReference) {
@@ -286,7 +320,7 @@ class KeySetting {
                 keyCodeReference.set(toLWJGLCode(e.getKeyCode()));
                 button.setText(KeyEvent.getKeyText(e.getKeyCode()));
                 button.removeKeyListener(this);
-                System.out.println(keyCodeReference.get());
+                saveSettingToFile();
             }
 
             @Override
@@ -297,5 +331,74 @@ class KeySetting {
         keySettingDialog.add(label);
         keySettingDialog.add(button);
         KeySettingPairCount++;
+    }
+
+    private void loadKeySettingFromFile() {
+        if (!MITEInfoGetter.getMITESettingFile().exists()){
+            System.out.println("MITEUtils settings file is not found,will create a new one");
+            try {
+                if (!MITEInfoGetter.getMITESettingFile().createNewFile()) {
+                    MITESettingFileExists = false;
+                    System.err.println("Failed to create option file,will not save your settings");
+                }
+            } catch (IOException e) {
+                MITESettingFileExists = false;
+                System.err.println("Failed to create option file,will not save your settings");
+                e.printStackTrace();
+            }
+        }
+        try (FileInputStream in = new FileInputStream(MITEInfoGetter.getMITESettingFile());
+             Scanner scanner = new Scanner(in)) {
+            while (scanner.hasNextLine()) {
+                String currentLine = scanner.nextLine();
+                if (currentLine.contains("Key")) {
+                    if (currentLine.contains("Key_CycleToChineseInput")) {
+                        Key_CycleToChineseInput.set(Integer.parseInt(currentLine.substring(currentLine.indexOf(":") + 1)));
+                    }
+                    if (currentLine.contains("Key_OpenSetting")) {
+                        Key_OpenSetting.set(Integer.parseInt(currentLine.substring(currentLine.indexOf(":") + 1)));
+                    }
+                    if (currentLine.contains("Key_CopyCurrentPosToClipboard")) {
+                        Key_CopyCurrentPosToClipboard.set(Integer.parseInt(currentLine.substring(currentLine.indexOf(":") + 1)));
+                    }
+                    if (currentLine.contains("Key_SaveCurrentPosToWaypoint")) {
+                        Key_SaveCurrentPosToWaypoint.set(Integer.parseInt(currentLine.substring(currentLine.indexOf(":") + 1)));
+                    }
+                    if (currentLine.contains("Key_SaveWaypointsToFile")) {
+                        Key_SaveWaypointsToFile.set(Integer.parseInt(currentLine.substring(currentLine.indexOf(":") + 1)));
+                    }
+                    if (currentLine.contains("Key_ReloadWaypointsFromFile")) {
+                        Key_ReloadWaypointsFromFile.set(Integer.parseInt(currentLine.substring(currentLine.indexOf(":") + 1)));
+                    }
+                    if (currentLine.contains("Key_OpenRemoveWaypointDialog")) {
+                        Key_OpenRemoveWaypointDialog.set(Integer.parseInt(currentLine.substring(currentLine.indexOf(":") + 1)));
+                    }
+                }
+                if (currentLine.contains("NumberOfWaypointsBackup")){
+                    Main.waypointUtilInstance.waypointsBackupFileMaximum.set(Integer.parseInt(currentLine.substring(currentLine.indexOf(":") + 1)));
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("Cannot load setting from file,will use default setting");
+            e.printStackTrace();
+        }
+    }
+
+    void saveSettingToFile(){
+        if (!MITESettingFileExists) return;
+        try (FileWriter out = new FileWriter(MITEInfoGetter.getMITESettingFile(),false)) {
+            String outResult = "Key_CycleToChineseInput:" + Key_CycleToChineseInput.get() + "\n" +
+                    "Key_OpenSetting:" + Key_OpenSetting.get() + "\n" +
+                    "Key_CopyCurrentPosToClipboard:" + Key_CopyCurrentPosToClipboard.get() + "\n" +
+                    "Key_SaveCurrentPosToWaypoint:" + Key_SaveCurrentPosToWaypoint.get() + "\n" +
+                    "Key_SaveWaypointsToFile:" + Key_SaveWaypointsToFile.get() + "\n" +
+                    "Key_ReloadWaypointsFromFile:" + Key_ReloadWaypointsFromFile.get() + "\n" +
+                    "Key_OpenRemoveWaypointDialog:" + Key_OpenRemoveWaypointDialog.get() + "\n" +
+                    "NumberOfWaypointsBackup:" + Main.waypointUtilInstance.waypointsBackupFileMaximum.get();
+            out.write(outResult);
+        } catch (IOException e) {
+            System.err.println("Failed to save settings file");
+            e.printStackTrace();
+        }
     }
 }

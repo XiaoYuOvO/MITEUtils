@@ -4,7 +4,7 @@ import java.awt.datatransfer.StringSelection;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-public class QuickChineseInput {
+class QuickChineseInput {
     private static JDialog frame;
     private static Point origin = new Point();
     private static JTextField textField = new JTextField();
