@@ -7,6 +7,7 @@ class Main {
    static QuickChineseInput quickChineseInputInstance = new QuickChineseInput();
    static WaypointUtil waypointUtilInstance = new WaypointUtil();
    static Setting keySettingInstance = new Setting();
+   static TimeUtils timeUtilsInstance = new TimeUtils();
     static void main() {
         Runtime.getRuntime().addShutdownHook(new Thread(()-> {
             waypointUtilInstance.saveWaypointsListToFile(MITEInfoGetter.getWaypointsFile());

@@ -83,6 +83,22 @@ class MITEInfoGetter {
     static void sendMessage(String msg){
         atv.setErrorMessage(msg,false);
     }
+
+    static int getTimeOfDay(){
+        try {
+            return atv.getClientPlayer().getWorld().getAdjustedTimeOfDay();
+        }catch (NullPointerException e){
+            return 0;
+        }
+    }
+
+//    static long getWorldSeed(){
+//        try {
+//            return atv.O.h.getWorld().x.h();
+//        }catch (NullPointerException e){
+//            return 0;
+//        }
+//    }
     /**
      * @param msg The message need to send
      * @param color The color of the chars

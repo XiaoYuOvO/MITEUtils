@@ -11,6 +11,7 @@ public class InfoGetThread extends Thread {
             try {
                 atc playerPos = MITEInfoGetter.getPlayerPos();
                 Main.posGetterInstance.setPosInfo(playerPos.getBlockX(), playerPos.getBlockY(), playerPos.getBlockZ());
+                Main.timeUtilsInstance.setTime(MITEInfoGetter.getTimeOfDay());
                 if (Display.isCreated()) {
                     if (Display.isActive()) {
                         if (!MITEInfoGetter.isAnyChatOpen()) {
@@ -40,6 +41,7 @@ public class InfoGetThread extends Thread {
                             }
                         }
                     }
+                    Main.timeUtilsInstance.setTimeInfoDialogPos(MITEInfoGetter.getWindowPosX()+MITEInfoGetter.getWindowWidth()-100,MITEInfoGetter.getWindowPosY()+MITEInfoGetter.getWindowHeight()-10);
                     Main.waypointUtilInstance.setWaypointsListDialogPos(MITEInfoGetter.getWindowPosX() + 10, MITEInfoGetter.getWindowPosY() + (MITEInfoGetter.getWindowHeight() / 2));
                     Main.posGetterInstance.setPosDialogBounds(MITEInfoGetter.getWindowPosX() + MITEInfoGetter.getWindowWidth() - 140, MITEInfoGetter.getWindowPosY() + 30);
                     Main.quickChineseInputInstance.setBonuds(MITEInfoGetter.getWindowPosX() + 10, MITEInfoGetter.getWindowPosY() + MITEInfoGetter.getWindowHeight() - 10);
